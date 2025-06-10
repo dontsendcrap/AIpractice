@@ -1,0 +1,37 @@
+def water_jug_bfs(jug1_cap, jug2_cap, target):
+    visited = set()
+    queue = [(0, 0)] 
+    while queue:
+        a, b = queue.pop(0)
+ 
+
+        if (a, b) in visited:
+            continue
+        visited.add((a, b))
+
+        print(f"Jug1: {a}L, Jug2: {b}L")
+
+        if a == target or b == target:
+            print(" Target achieved!")
+            return True
+
+        
+       
+        next_states = [
+            (jug1_cap, b),            
+            (a, jug2_cap),            
+            (0, b),                   
+            (a, 0),                   
+            (a - min(a, jug2_cap - b), b + min(a, jug2_cap - b)), 
+            (a + min(b, jug1_cap - a), b - min(b, jug1_cap - a))   
+        ]
+
+        for state in next_states:
+            if state not in visited:
+                queue.append(state)
+
+    print(" Target not achievable.")
+    return False
+
+
+water_jug_bfs(4, 3, 2)
