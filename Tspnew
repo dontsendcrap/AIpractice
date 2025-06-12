@@ -1,0 +1,49 @@
+import random
+def getRandomSolution(tsp):
+    cities=list(range(len(tsp)))
+    random.shuffle(cities)
+    return cities
+def getRouteLength(tsp,solution):
+    cost=0
+    for i in range(len(tsp)-1):
+        cost+=tsp[solution[i]][solution[i+1]]
+    cost+=tsp[solution[-1]][solution[0]]
+    return cost
+def getNeighbours(solution):
+    neighbours=[]
+    for i in range(len(solution)-1):
+        for j in range(i+1,len(solution)):
+            neighbour=solution.copy()
+            neighbour[i],neighbour[j]=solution[j],solution[i]
+            neighbours.append(neighbour)
+    return neighbours
+def getBestNeighbour(tsp,neighbours):
+    bestNeighbour,bestRouteLength=neighbours[0],getRouteLength(tsp,neighbours[0])
+    for neighbour in neighbours:
+        curlength=getRouteLength(tsp,neighbour)
+        if curlength<bestRouteLength:
+            bestRouteLength=curlength
+            bestNeighbour=neighbour
+    return bestNeighbour,bestRouteLength
+
+def hillClimbing(tsp):
+    currentSolution=getRandomSolution(tsp)
+    currentSolutionRouteLength=getRouteLength(tsp,currentSolution)
+    currentNeighbours=getNeighbours(currentSolution)
+    bestNeighbour,bestNeigbourRouteLenth=getBestNeighbour(tsp,currentNeighbours)
+    while bestNeigbourRouteLenth<currentSolutionRouteLength:
+        currentSolution,currentSolutionRouteLength=bestNeighbour,bestNeigbourRouteLenth
+        currentNeighbours=getNeighbours(currentSolution)
+        bestNeighbour,bestNeigbourRouteLenth=getBestNeighbour(tsp,currentNeighbours)
+    return currentSolutionRouteLength,currentSolution
+
+tsp = [
+        [0, 20,10,15],
+        [20, 0, 15, 11],
+        [10, 15, 0, 17],
+        [15, 11, 17, 0]
+    ]
+
+length,path = hillClimbing(tsp)
+print(length)
+print(path)
