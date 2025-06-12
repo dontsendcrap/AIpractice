@@ -1,0 +1,46 @@
+# Function to check if a state is valid
+def is_valid(m, c):
+    return (m == 0 or m >= c) and (3 - m == 0 or 3 - m >= 3 - c)
+
+# Generate all possible next moves
+def get_successors(state):
+    m, c, boat = state
+    moves = [(1,0), (2,0), (0,1), (0,2), (1,1)]
+    successors = []
+
+    for dm, dc in moves:
+        if boat == 0:  # Boat on left
+            nm, nc, nb = m - dm, c - dc, 1
+        else:  # Boat on right
+            nm, nc, nb = m + dm, c + dc, 0
+
+        if 0 <= nm <= 3 and 0 <= nc <= 3 and is_valid(nm, nc):
+            successors.append((nm, nc, nb))
+    return successors
+
+# BFS solver using list
+def solve():
+    start = (3, 3, 0)
+    goal = (0, 0, 1)
+    queue = [(start, [])]
+    visited = set()
+
+    while queue:
+        state, path = queue[0]
+        queue = queue[1:]
+
+        if state in visited:
+            continue
+        visited.add(state)
+
+        if state == goal:
+            return path + [state]
+
+        for next_state in get_successors(state):
+            queue.append((next_state, path + [state]))
+
+# Run and print steps with labels
+solution = solve()
+for i, (m, c, boat) in enumerate(solution):
+    side = "Left" if boat == 0 else "Right"
+    print(f"Step {i}: M = {m}, C = {c}, Boat = {side}")
