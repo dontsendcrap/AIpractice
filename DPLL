@@ -1,0 +1,57 @@
+def DPLL( clauses , assignment = {}):
+
+    #If all the literals are satisfies 
+
+    if all (
+
+         any(
+             
+            ( lit > 0 and assignment.get(lit)==True) or 
+            ( lit < 0 and assignment.get(-lit)==False)
+
+            for lit in clause
+        )
+        for clause in clauses
+    ):  
+        return assignment
+
+    if any (
+         all(
+             
+            ( lit > 0 and assignment.get(lit)==False) or 
+            ( lit < 0 and assignment.get(-lit)== True)
+
+            for lit in clause
+        )
+        for clause in clauses
+    ):  
+        return None
+    
+
+    for clause in clauses:
+
+        for lit in clause:
+
+            var = abs(lit)
+
+            if var not in assignment:
+
+                result = DPLL(clauses , {**assignment  ,var : True})
+
+                if result is not None:
+
+                    return result 
+                return DPLL(clauses , {**assignment , var:False})
+
+    return None
+
+
+cnf = [[1, -2], [-1, 2]]
+
+solution = DPLL(cnf)
+
+# Output the result
+if solution:
+    print("SATISFIABLE. Assignment:", solution)
+else:
+    print("UNSATISFIABLE.")
