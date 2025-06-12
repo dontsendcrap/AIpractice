@@ -1,3 +1,5 @@
+import heapq
+
 def uniform_cost_search(graph, start, goal):
     visited = set()
     queue = [(0, start, [start])]  # (cost, current_node, path)
@@ -31,4 +33,4 @@ graph = {
 
 path, total_cost = uniform_cost_search(graph, 'A', 'F')
 print("Path:", path)
-print("Total Cost:", total_cost)
+print("Total Cost:", total_cost)
