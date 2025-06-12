@@ -1,0 +1,39 @@
+#Travelling SalesPerson
+
+graph = [
+    [0, 10, 150, 20],  
+    [10, 0, 35, 25],   
+    [15, 890, 0, 30],  
+    [20, 25, 100, 0]
+]
+
+n = len(graph)
+min_path = 10**9 
+best_route = []
+
+def tsp(path, visited, cost):
+    global min_path, best_route
+
+    if len(path) == n:
+      
+        total_cost = cost + graph[path[-1]][path[0]]
+        if total_cost < min_path:
+            min_path = total_cost
+            best_route = path[:]
+        return
+
+    for city in range(n):
+        if not visited[city]:
+            visited[city] = True
+            path.append(city)
+            tsp(path, visited, cost + graph[path[-2]][city])
+            path.pop()
+            visited[city] = False
+
+
+visited = [False] * n
+visited[0] = True
+tsp([2], visited, 0)
+
+print("Minimum Cost:", min_path)
+print("Best Route:", best_route + [best_route[0]])
