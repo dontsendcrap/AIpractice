@@ -1,0 +1,52 @@
+# Graph as adjacency matrix
+import numpy as np
+
+INF = float('inf')
+
+# Number of nodes
+n = 7
+
+# Adjacency matrix for the graph
+graph = [
+    [0, 12, 10, INF, INF, INF, 12],  # Node 1
+    [12, 0, 8, 12, INF, INF, INF],   # Node 2
+    [10, 8, 0, 11, 3, INF, 9],       # Node 3
+    [INF, 12, 11, 0, 11, 10, INF],   # Node 4
+    [INF, INF, 3, 11, 0, 6, 7],      # Node 5
+    [INF, INF, INF, 10, 6, 0, 9],    # Node 6
+    [12, INF, 9, INF, 7, 9, 0]       # Node 7
+]
+
+# Nearest Neighbor TSP
+def tsp_nearest_neighbor(graph, start=0):
+    n = len(graph)
+    visited = [False] * n
+    path = [start]
+    total_cost = 0
+    current = start
+    visited[current] = True
+
+    for _ in range(n - 1):
+        next_city = None
+        min_dist = INF
+        for j in range(n):
+            if not visited[j] and 0 < graph[current][j] < min_dist:
+                min_dist = graph[current][j]
+                next_city = j
+        if next_city is not None:
+            path.append(next_city)
+            visited[next_city] = True
+            total_cost += min_dist
+            current = next_city
+
+    # Return to start city
+    total_cost += graph[current][start]
+    path.append(start)
+
+    return path, total_cost
+
+# Run
+path, cost = tsp_nearest_neighbor(graph, start=0)
+path_display = [p + 1 for p in path]  # To display 1-based node labels
+print("Optimal path (approx.):", path_display)
+print("Total cost:", cost)
