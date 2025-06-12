@@ -1,0 +1,35 @@
+# Simple Room Knowledge Base
+
+facts = {
+    "furniture": ["desk", "chair", "bed", "bookshelf", "wardrobe"],
+    "walls": {
+        "desk": "wall 4", "chair": "center", "bed": "wall 3",
+        "bookshelf": "wall 2", "wardrobe": "wall 1"
+    },
+    "windows": {
+        "desk": "window 2", "bed": "window 1"
+    },
+    "corners": {
+        "desk": "corner 4", "bed": "corner 3",
+        "bookshelf": "corner 2", "wardrobe": "corner 1"
+    },
+    "positions": {
+        "left of desk": "window 2", "right of desk": "chair",
+        "right of chair": "bed", "right of bed": "bookshelf"
+    },
+    "door": "wall 1"
+}
+
+def query_furniture(): return facts["furniture"]
+def count(item): return len(facts.get(item, {})) if item in facts else 1 if item == "door" else 0
+def location(item): return {k: facts[k].get(item, "none") for k in ["walls", "windows", "corners"]}
+def what_is_at(place, name): return [i for i, v in facts.get(place, {}).items() if v == name]
+def relative_pos(q): return facts["positions"].get(q, "unknown")
+
+# Example Queries
+print("Furniture:", query_furniture())
+print("Windows:", count("windows"))
+print("Location of bed:", location("bed"))
+print("At wall 2:", what_is_at("walls", "wall 2"))
+print("Right of desk:", relative_pos("right of desk"))
+print("In corner 1:", what_is_at("corners", "corner 1"))
