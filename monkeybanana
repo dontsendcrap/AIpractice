@@ -1,0 +1,60 @@
+
+start = ('door', 'corner', False, False)  
+goal = ('center', 'center', True, True)  
+
+def bfs(start, goal):
+    queue = [(start, [])]  
+    visited = []          
+
+    while queue:
+        state, path = queue[0]  
+        queue = queue[1:]       
+        if state in visited:
+            continue            
+
+        visited.append(state)  
+
+        if state == goal:
+            return path        
+
+       
+        m, b, on, got = state   
+        next_steps = []       
+
+        if not on:
+            
+            for p in ['corner', 'center', 'door']:
+                if p != m:
+                    new_state = (p, b, False, got)
+                    next_steps.append((new_state, f"Move to {p}"))
+
+           
+            if m == b:
+                for p in ['corner', 'center', 'door']:
+                    if p != b:
+                        new_state = (p, p, False, got)
+                        next_steps.append((new_state, f"Push box to {p}"))
+
+            
+            if m == b:
+                new_state = (m, b, True, got)
+                next_steps.append((new_state, "Climb box"))
+
+        
+        if m == b == 'center' and on and not got:
+            new_state = (m, b, True, True)
+            next_steps.append((new_state, "Grab banana"))
+
+        
+        for new_state, action in next_steps:
+            queue.append((new_state, path + [action]))  
+
+result = bfs(start, goal)
+
+
+if result:
+    print("Solution:\n")
+    for step in result:
+        print(step)
+else:
+    print("No solution found.")
